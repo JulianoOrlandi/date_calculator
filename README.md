@@ -1,0 +1,48 @@
+# Calendar Programming Study
+
+#### **Abstract:**
+
+This is a study on calendar programming. There was two main goals. The first was to understand how to work with calendars in a programming context and the second was to implement code to solve some problems related to dates. The main issue addressed was the calculation of the difference in days between two dates.
+
+#### **Objectives:**
+
+- coding a *date* class;
+- coding a *method* that allows to subtract one date from another.
+
+#### **Justification:**
+
+Calendars are systems for organizing the passage of time. In general, they are elaborated from the observation of natural phenomena that present some degree of regularity as the phases of the Moon or the seasons of the year. Throughout history, mankind has developed different forms of calendar based on the observation of different natural phenomena. This study deals exclusively with the most widely used calendar in the world, which was introduced by Pope Gregory XIII in the year 1582. It is known as the Gregorian calendar.
+
+The main problem with the construction of calendars is that the natural phenomena taken into account are not perfectly symmetrical. For example, a solar year represents the time it takes the Earth to complete one revolution around the Sun. Days represent the time it takes the Earth to complete one rotation around its own axis. During a solar year, the Earth makes approximately 365.242189 rotations around its own axis. There is, therefore, no perfect symmetry between the solar year and the number of Earth rotations. To establish a calendar taking into account these two phenomena, one would have to sacrifice the accuracy of the year or the number of days. In this case, the most accepted solution is to establish a 365-day cycle and, every 3 cycles, add one day to the next year. So (365 * 3) + 366 is approximately the same as (365.242189 * 4). This is the idea of the leap year.
+
+The challenge in implementing code to perform date calculations is this type of variability present in calendars. In the case of the Gregorian calendar, for example, to calculate the difference in days between two dates, one must take into account that some months have 31 days, others 30 days and one month has 28 or 29 days, depending on whether it is a leap year. The difference, for example, between 2001-04-10 and 2001-03-10 is 31 days, between 2001-05-10 and 2001-04-10 is 30 days, between 2001-03-10 and 2001-02-10 is 28 days and between 2000-03-10 and 2000-02-10 is 29 days. The purpose of this project was to develop an algorithm that took these particularities in consideration and was able to perform calculations with dates.
+
+Although there are already libraries and modules designed for this kind of task (the datetime module, for example), they were avoided during the development of this project. The main purpose here was to practice some of the fundamental notions of programming like loops, conditionals, functions, classes, methods and dunder methods. Using the available modules or simply understanding how they work would probably influence the development of the algorithm and nullify the learning purpose of this study. However, they were used later to verify the efficiency of the code written and to evaluate its performance.
+
+#### **Class:**
+##### **- Date:**
+
+The constructor method of date class takes three parameters: year, month and day. The code in lines 5-34 checks if the user's inputs are valid. The year parameter must be an integer above 1. The month parameter must be an integer greater or equal to 1 and lesser or equal to 12. The validity of the day parameter depends on the month and on the type of year. To check it, the code first verify if the month passed has 31 or 30 days. It expects then that the day parameter to be an integer greater or equal to 1 and lesser or equal, depending on the month parameter, to 31 or to 30. If the month is February, however, the code checks by the function `is_leap()` if the year is a leap year or not. If it is so, it expects that the day parameter to be an integer greater or equal to 1 and lesser or equal to 29. If it is not so, it expects that the day parameter to be an integer greater or equal to 1 and lesser or equal to 28.
+
+In lines 36-38, the parameters are passed as attributes to the object. In line 39, the attribute `duration_in_days` is created by using the function `convert_to_days`. Basically, this function calculates the number of days of the date created since 0001-01-01, the first day of the calendar.
+
+After that, there are two dunder methods. The first one is `__str__` method and its purpose is simply to print the object created. The second one is the `__sub__` method and it subtracts a given value from the object. The method contains two possibilities. It's possible to subtract a date from the object or to subtract a number of days.
+
+#### **Functions:**
+##### **- is_leap:**
+
+The `is_leap` function takes an integer as an argument and returns a boolean value. True if it is a leap year and false if not. The notion of a leap year, as described above, was introduced by the Romans on January 1, 45 BC. Julius Caesar was the consul at that time, hence the name of the calendar: Julian. Adding one day to the year every four years solves the asymetry between the solar year and the rotations of the Earth around its own axis, but it does only partially. (365 * 3) + 366 is equal to 1461 and 365.242189 * 4 is actually 1460.968756. The difference is not relevant from one year to another, but, with centuries passing, it acumulates and starts to cause some problems. That was actually the reason that led the Catholic Church to introduce a new calendar in 1582. After 1627 years, the historical dates in Julian calendar were not aligned anymore with natural phenomena. The new calendar didn't only aligned the dates with the solar year but introduced also a new rule to leap years. As the leap year makes the calendar to be a little ahead of the solar year, it's necessary  every now or then to skip a leap year to realign the calendar and the stars. The Gregorian calendar does that by creating a more complex rule to determine leap years. That was the rule implemented in the `is_leap` function. Basically it skips three leap years in an interval of four centuries.
+
+##### **- convert_to_days:**
+
+The `convert_to_days` function takes a Date object as an argument and returns an integer. The idea here is to provide a specific number for every date possible. The algorithm starts by taking every whole year before the year in the date. It than tests each one of them with the `is_leap` function and adds the number of days in accordance with the result of this test. This is the code in lines 71-83. In lines 85-105, the algorithm takes every whole month before the month in the date and tests them to verify how many days are in each one of them. If the month number is 1, 3, 5, 7, 8, 10 or 12, it adds 31 days. If the month is 4, 6, 9 or 11, it adds 30 days. If the month is February, the algorithm tests the year with the `is_leap` function. If the result is True, it adds 29 days. Otherwise, it adds 28 days. Finally, the algorithm adds the number of days that is in the Date object.
+
+It's important to take in consideration that this calculation deals with dates as if the Gregorian calendar was in use since the beggining of the common era. That is not true and even after 1582, when the calendar was established, it was not true for every country. Some of them adopted the Gregorian calendar much later. This issue was not addressed  here because dealing with historical dates was not the goal of this study. But certainly it suggests ideas for new projects like a programm that converts dates from one calendar to another.
+
+#### **Conclusion:**
+
+ The class and the functions created were tested in a file called `test_date.py`. The most important test was for the dunder method `__sub__`. In this case I used the datetime module to check if my code was able to return the same results.
+
+ In the file called `comparison.py`, I compared my algorithm with the datetime module. The main purpose was to evaluate the speed with which the two codes performed some date calculations. Although I understand that timing the code execution is not an accurate way to gauge the efficiency of an algorithm, I used the time module anyway. I didn't think it was a problem because the purpose of this project was purely educational and because the results have been so far apart from each other that the test's imprecision lost importance. My code took 90.9689 seconds to perform the same calculations that the datetime module took 0.2969. This was a pretty bad result.
+
+ I have not yet investigated the reasons for this difference. The most obvious thing to do is to study the datetime module documentation in detail and understand how dates subtraction works. This is the main task for the continuation of this study. It is likely that the datetime module makes use of the Julian day concept. In accordance to my readings during the preparation of this study, the Julian day is a resource frequently used in astronomy and programming that makes easy to calculate elapsed days between two dates. Understanding this concept is, therefore, another task to continue this study. Perhaps in this way it will become possible to develop my algorithm and make it more efficient in dealing with dates.
